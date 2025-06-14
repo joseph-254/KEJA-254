@@ -1,0 +1,8 @@
+{
+    "Configurations": true,
+    "Authentication": true,
+    "DashboardManagement": true,
+    "PropertyManagement": true,
+    "PaymentManagement": true,
+    "NotificationManagement": true
+}

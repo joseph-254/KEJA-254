@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Property Listing | KEJA254</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-yellow: #f7f700;
+            --primary-green: #b5e48c;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-yellow) 0%, var(--primary-green) 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .glass-nav {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-pill {
+            padding: 1rem 2rem;
+            margin: 0 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            color: #333;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-pill:hover {
+            background: linear-gradient(45deg, var(--primary-yellow), var(--primary-green));
+            box-shadow: 0 0 25px var(--primary-yellow);
+            transform: translateY(-2px);
+        }
+
+        .nav-pill.active {
+            background: linear-gradient(45deg, var(--primary-yellow), var(--primary-green));
+            box-shadow: 0 0 15px var(--primary-green);
+        }
+
+        .form-section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .btn-glow {
+            background: linear-gradient(45deg, var(--primary-yellow), var(--primary-green));
+            border: none;
+            color: #333;
+            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-glow:hover {
+            box-shadow: 0 0 25px var(--primary-yellow);
+            transform: scale(1.05);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 10px var(--primary-yellow);
+        }
+
+        .progress-tracker {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .progress-step {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--primary-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            z-index: 2;
+        }
+
+        .progress-step.active {
+            background: var(--primary-yellow);
+            border-color: var(--primary-green);
+        }
+
+        .progress-bar {
+            position: absolute;
+            height: 4px;
+            background: var(--primary-green);
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .nav-pill {
+                padding: 0.8rem 1rem;
+                margin: 0.2rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <!-- Progress Tracker -->
+        <div class="progress-tracker">
+            <div class="progress-step active">1</div>
+            <div class="progress-step">2</div>
+            <div class="progress-step">3</div>
+            <div class="progress-step">4</div>
+            <div class="progress-step">5</div>
+            <div class="progress-bar" style="width: 20%"></div>
+        </div>
+
+        <!-- Glass Navigation -->
+        <nav class="glass-nav mb-5">
+            <div class="nav justify-content-center" id="nav-tab">
+                <button class="nav-link nav-pill active" data-step="1">Owner Info</button>
+                <button class="nav-link nav-pill" data-step="2">Property Details</button>
+                <button class="nav-link nav-pill" data-step="3">Location</button>
+                <button class="nav-link nav-pill" data-step="4">Media</button>
+                <button class="nav-link nav-pill" data-step="5">Payment</button>
+            </div>
+        </nav>
+
+        <!-- Form Sections -->
+        <form id="listingForm" class="form-section">
+            <!-- Owner Info Section -->
+            <div class="form-step active">
+                <h3 class="mb-4">👤 Owner Information</h3>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Contact Number</label>
+                        <input type="tel" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Details Section -->
+            <div class="form-step">
+                <h3 class="mb-4">🏠 Property Details</h3>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">County</label>
+                        <select class="form-select" required>
+                            <option value="">Select County</option>
+                            <!-- Add county options -->
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Property Type</label>
+                        <select class="form-select" required>
+                            <option value="">Select Type</option>
+                            <option value="apartment">Apartment</option>
+                            <option value="land">Land</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Value (KES)</label>
+                        <input type="number" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location Section -->
+            <div class="form-step">
+                <h3 class="mb-4">📍 Location Details</h3>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Latitude</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Longitude</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="col-12">
+                        <button type="button" class="btn-glow">
+                            <i class="fas fa-map-marker-alt"></i> Select on Map
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Media Upload Section -->
+            <div class="form-step">
+                <h3 class="mb-4">📸 Property Media</h3>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <input type="file" class="form-control" accept="image/*" required>
+                        <small class="text-muted">Front View</small>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="file" class="form-control" accept="image/*" required>
+                        <small class="text-muted">Interior</small>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="file" class="form-control" accept="image/*" required>
+                        <small class="text-muted">Surroundings</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Section -->
+            <div class="form-step">
+                <h3 class="mb-4">💳 Payment Information</h3>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">M-Pesa Number</label>
+                        <input type="tel" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Amount</label>
+                        <input type="text" class="form-control" value="KES 2,500" readonly>
+                    </div>
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn-glow px-5">
+                            <i class="fas fa-lock"></i> Complete Listing
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Add form step navigation logic here
+        // --- STEP NAVIGATION LOGIC ---
+const steps = Array.from(document.querySelectorAll('.step-section'));
+const navLinks = Array.from(document.querySelectorAll('.mirror-navbar .nav-link'));
+const circles = Array.from(document.querySelectorAll('.stepper-indicator .circle'));
+let currentStep = 0;
+
+function showStep(step) {
+  steps.forEach((sec, idx) => sec.classList.toggle('active', idx === step));
+  navLinks.forEach((link, idx) => link.classList.toggle('active', idx === step));
+  circles.forEach((circle, idx) => {
+    circle.classList.toggle('active', idx === step);
+    circle.classList.toggle('completed', idx < step);
+  });
+  currentStep = step;
+}
+navLinks.forEach((link, idx) => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (idx <= currentStep) showStep(idx);
+  });
+});
+document.getElementById('nextBtn0').onclick = () => showStep(1);
+document.getElementById('prevBtn1').onclick = () => showStep(0);
+document.getElementById('nextBtn1').onclick = () => showStep(2);
+document.getElementById('prevBtn2').onclick = () => showStep(1);
+document.getElementById('nextBtn2').onclick = () => showStep(3);
+document.getElementById('prevBtn3').onclick = () => showStep(2);
+document.getElementById('nextBtn3').onclick = () => showStep(4);
+document.getElementById('prevBtn4').onclick = () => showStep(3);
+
+// --- PROPERTY TYPE LOGIC ---
+document.getElementById('propertyType').addEventListener('change', function () {
+  const type = this.value;
+  document.getElementById('apartmentFields').style.display = type === 'apartment' ? 'block' : 'none';
+  document.getElementById('landFields').style.display = type === 'land' ? 'block' : 'none';
+});
+document.getElementById('landSize').addEventListener('change', function () {
+  const isCustom = this.value === 'custom';
+  document.getElementById('customLandArea').style.display = isCustom ? 'block' : 'none';
+});
+
+// --- MULTI-UNIT LOGIC ---
+let unitCount = 1;
+const unitsContainer = document.getElementById('unitsContainer');
+const unitTemplate = document.getElementById('unitTemplate').cloneNode(true);
+unitTemplate.style.display = 'none';
+
+// Add a new unit section
+function addUnit() {
+  unitCount++;
+  const newUnit = unitTemplate.cloneNode(true);
+  newUnit.style.display = '';
+  newUnit.id = '';
+  // Update all fields' names and IDs to be unique per unit
+  newUnit.querySelectorAll('[data-unit-field]').forEach(field => {
+    const baseName = field.getAttribute('data-base-name');
+    field.name = baseName + '_' + unitCount;
+    field.id = baseName + '_' + unitCount;
+    if (field.type === 'file' || field.type === 'text' || field.type === 'number') field.value = '';
+  });
+  // Update unit label
+  newUnit.querySelector('.unit-label').textContent = 'Unit #' + unitCount;
+  unitsContainer.appendChild(newUnit);
+}
+document.getElementById('addUnitBtn').onclick = addUnit;
+
+// --- PER-UNIT GEOLOCATION ---
+function getUnitLocation(unitNum) {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      document.getElementById('latitude_' + unitNum).value = position.coords.latitude.toFixed(6);
+      document.getElementById('longitude_' + unitNum).value = position.coords.longitude.toFixed(6);
+    }, function () {
+      alert('Unable to retrieve your location.');
+    });
+  } else {
+    alert('Geolocation is not supported by your browser.');
+  }
+}
+// Attach event for all "Use My Location" buttons per unit
+function attachUnitLocationEvents() {
+  document.querySelectorAll('.btn-unit-location').forEach(btn => {
+    btn.onclick = function () {
+      const unitNum = this.getAttribute('data-unit');
+      getUnitLocation(unitNum);
+    }
+  });
+}
+attachUnitLocationEvents();
+
+// --- MULTI-UNIT PHOTO UPLOAD VALIDATION ---
+function validateUnitPhotos(unitNum) {
+  const front = document.getElementById('frontView_' + unitNum).files.length;
+  const left = document.getElementById('leftView_' + unitNum).files.length;
+  const right = document.getElementById('rightView_' + unitNum).files.length;
+  if (!front || !left || !right) {
+    alert(`Please select all required photos for Unit #${unitNum} before uploading.`);
+    return false;
+  }
+  alert(`Photos for Unit #${unitNum} uploaded successfully!`);
+  return true;
+}
+// Attach per-unit photo upload events
+function attachUnitPhotoEvents() {
+  document.querySelectorAll('.uploadPhotosBtn').forEach(btn => {
+    btn.onclick = function () {
+      const unitNum = this.getAttribute('data-unit');
+      validateUnitPhotos(unitNum);
+    }
+  });
+}
+attachUnitPhotoEvents();
+
+// --- PAYMENT AND SUBMISSION ---
+document.getElementById('payBtn').addEventListener('click', function () {
+  const number = document.getElementById('mpesaNumber').value;
+  const charge = document.getElementById('totalCharge').textContent;
+  if (!number) return alert('Please enter M-Pesa number');
+  alert(`STK Push sent to ${number} for Ksh ${charge}. Wait for confirmation.`);
+  document.getElementById('submitPropertyBtn').disabled = false;
+});
+
+document.getElementById('submitPropertyBtn').addEventListener('click', function () {
+  alert('Property submitted successfully!');
+  // Optionally, reset form or redirect
+});
+
+// --- CHARGE CALCULATION ---
+document.getElementById('value').addEventListener('input', function () {
+  let v = parseInt(this.value, 10) || 0;
+  document.getElementById('totalCharge').textContent = Math.max(100, Math.round(v * 0.01));
+});
+
+// --- FORM SUBMISSION PREVENTION ---
+document.getElementById('listingForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+});
+
+// --- INITIALIZATION FOR EXISTING UNITS ---
+function initializeMultiUnitFeatures() {
+  attachUnitLocationEvents();
+  attachUnitPhotoEvents();
+}
+initializeMultiUnitFeatures();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+CODE FLOW
+1. Perplexity 4 (SurveyIntelAfrica)
+2. Perplexity 7 (KEJA254)
+3. L_Dashboard 4 (Landing Dashboard)
+4. Add Listing 1 (Add new listing)
+
+- Appearance of the Unit listings (Client page)
+- Buttons on Cards (SurveyIntel Page)
+-Rental/ commercial (KEJA254 page)
+-Nearplace (Hints)

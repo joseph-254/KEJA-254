@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Keja254 - Find Your Perfect Home</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+
+<style>
+    :root {
+      --primary-yellow: #FFD600;
+      --primary-green: #23b36b;
+      --accent: #FFF9C4;
+      --light: #f6fff8;
+      --dark: #222;
+    }
+    body {
+      font-family: 'Quicksand', Arial, sans-serif;
+      background: var(--light);
+      color: var(--dark);
+    }
+    h1, h2, h3, h4, h5, h6, .navbar-brand {
+      font-family: 'Montserrat', Arial, sans-serif;
+      letter-spacing: 1px;
+    }
+    .navbar {
+      background: #fff;
+      border-bottom: 2px solid var(--primary-green);
+    }
+    .navbar-brand {
+      font-weight: 700;
+      color: var(--primary-yellow) !important;
+      font-size: 1.7rem;
+      letter-spacing: 2px;
+    }
+    .btn-primary, .btn-outline-primary {
+      background: linear-gradient(90deg, var(--primary-yellow), var(--primary-green));
+      border: none;
+      color: #222 !important;
+      font-weight: 700;
+      transition: box-shadow 0.2s;
+    }
+    .btn-primary:hover, .btn-outline-primary:hover {
+      box-shadow: 0 0 12px 2px var(--primary-yellow), 0 0 18px 4px var(--primary-green);
+      color: var(--dark) !important;
+    }
+    .btn-my-location {
+      background: var(--primary-green);
+      color: #fff;
+      border: none;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .btn-my-location:hover {
+      background: var(--primary-yellow);
+      color: var(--dark);
+    }
+    .search-card {
+      background: linear-gradient(90deg, #fff, #fffde7 70%);
+      border: 2px solid var(--primary-green);
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(35,179,107,0.07);
+    }
+    #map {
+      height: 400px;
+      width: 100%;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 12px rgba(255,214,0,0.07);
+      z-index: 1;
+    }
+    .property-list {
+      max-height: 480px;
+      overflow-y: auto;
+    }
+    .property-card {
+      border-radius: 15px;
+      box-shadow: 0 2px 12px rgba(35,179,107,0.07);
+      transition: transform 0.3s, box-shadow 0.3s;
+      overflow: hidden;
+      background: #fff;
+      cursor: pointer;
+    }
+    .property-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 0 24px 8px var(--primary-green), 0 0 32px 12px var(--primary-yellow);
+    }
+    .carousel-inner img {
+      border-radius: 15px 15px 0 0;
+      height: 160px;
+      object-fit: cover;
+      width: 100%;
+    }
+    .property-card .card-title {
+      color: var(--primary-yellow);
+      font-weight: 700;
+    }
+    .property-card .fw-bold {
+      color: var(--primary-green);
+    }
+    .leaflet-popup-content {
+      text-align: center;
+      padding: 8px;
+    }
+    .property-popup-img {
+      width: 180px;
+      max-width: 90vw;
+      border-radius: 10px;
+      box-shadow: 0 0 16px 2px var(--primary-yellow), 0 0 20px 2px var(--primary-green);
+      margin-bottom: 6px;
+      transition: box-shadow 0.3s;
+    }
+    .leaflet-control-layers {
+      font-size: 1rem;
+    }
+    .property-list::-webkit-scrollbar {
+      width: 8px;
+    }
+    .property-list::-webkit-scrollbar-thumb {
+      background: var(--primary-yellow);
+      border-radius: 8px;
+    }
+    @media (max-width: 991px) {
+      .property-list { max-height: 240px; }
+      #map { height: 280px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="KEJA254.png" alt="KEJA254 Logo" style="height:48px; width:auto; margin-right:12px; border-radius:10px; box-shadow:0 2px 12px #FFD60033;">
+        <span style="font-family:'Montserrat',Arial,sans-serif; font-weight:900; letter-spacing:0.04em; color:#222; text-shadow:0 0 12px #FFD60099;">KEJA254</span>
+      </a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#signInModal" id="signInNav">
+              <i class="fas fa-user me-1"></i> Sign In
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="listPropertyNav">
+              <i class="fas fa-plus-circle me-1"></i> List Property
+            </a>
+            <a class="nav-link" href="#" id="navSearch">🔍 Search Properties</a>
+          </li>
+        </ul>
+      </div>
+      
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container my-4">
+    <!-- Search Section -->
+    <div class="search-card p-4 mb-4">
+      <h4 class="mb-3">Find Your Perfect Home</h4>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Location</label>
+          <select class="form-select" id="county-select">
+            <option selected>Select County</option>
+            <option>Mombasa</option>
+            <option>Kwale</option>
+            <option>Kilifi</option>
+            <option>Tana River</option>
+            <option>Lamu</option>
+            <option>Taita Taveta</option>
+            <option>Garissa</option>
+            <option>Wajir</option>
+            <option>Mandera</option><option>Marsabit</option><option>Isiolo</option>
+            <option>Meru</option><option>Tharaka Nithi</option><option>Embu</option>
+            <option>Kitui</option><option>Machakos</option>
+            <option>Makueni</option><option>Nyandarua</option>
+            <option>Nyeri</option><option>Kirinyaga</option>
+            <option>Murang'a</option><option>Kiambu</option>
+            <option>Turkana</option><option>West Pokot</option>
+            <option>Samburu</option><option>Trans Nzoia</option>
+            <option>Uasin Gishu</option><option>Elgeyo Marakwet</option>
+            <option>Nandi</option><option>Baringo</option>
+            <option>Laikipia</option><option>Nakuru</option><option>Narok</option>
+<option>Kajiado</option><option>Kericho</option><option>Bomet</option>
+<option>Kakamega</option><option>Vihiga</option><option>Bungoma</option>
+<option>Busia</option><option>Siaya</option><option>Kisumu</option>
+<option>Homa Bay</option><option>Migori</option><option>Kisii</option><option>Nyamira</option><option>Nairobi</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Property Type</label>
+          <select class="form-select" id="type-select">
+            <option selected>Any</option>
+            <option>Bedsitter</option>
+            <option>1 Bedroom</option>
+            <option>2 Bedroom</option>
+            <option>Studio</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">My Location</label>
+          <button class="btn btn-my-location w-100" id="my-location-btn">
+            <i class="fas fa-crosshairs me-1"></i> Use My Location
+          </button>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Price Range</label>
+          <select class="form-select" id="price-select">
+            <option selected>Any</option>
+            <option>Under KSh 5,000</option>
+            <option>KSh 5,000 - 10,000</option>
+            <option>KSh 10,000 - 20,000</option>
+            <option>Over KSh 20,000</option>
+          </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button class="btn btn-primary w-100" id="search-btn">
+            <i class="fas fa-search me-1"></i> Search
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map and Property List -->
+    <div class="row">
+      <div class="col-lg-8">
+        <div id="map" class="mb-4"></div>
+      </div>
+      <div class="col-lg-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5>Available Properties</h5>
+          <small class="text-muted" id="property-count"></small>
+        </div>
+        <div class="property-list" id="property-list">
+          <!-- Property cards rendered here -->
+        </div>
+      </div>
+    </div>
+    <div class="container mt-4 mb-5" id="searchSection" style="display:none;">
+        <div class="glass-card">
+          <h3 class="mb-4">📍 Property Search</h3>
+          
+          <!-- Search Input -->
+          <div class="mb-4">
+            <input type="text" id="searchInput" class="form-control" 
+                   placeholder="Enter area (e.g. Kilimani, Nairobi)" 
+                   style="border-radius: 12px; padding: 1rem;">
+          </div>
+  </div>
+
+  <div id="searchMap" style="height: 500px; border-radius: 16px;" class="mb-4"></div>
+
+    <!-- Directions Panel -->
+    <div class="directions-panel">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <input type="text" id="directionsFrom" class="form-control" 
+                 placeholder="From current location">
+          <button class="btn btn-glow mt-2" onclick="getRoute('current')">
+            <i class="fas fa-location-arrow"></i> Current Location
+          </button>
+        </div>
+        <div class="col-md-6">
+          <input type="text" id="customFrom" class="form-control" 
+                 placeholder="Enter custom starting point">
+          <button class="btn btn-custom mt-2" onclick="getRoute('custom')">
+            <i class="fas fa-map-marker-alt"></i> Custom Route
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Bootstrap JS, Leaflet JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- Carousel dependency for property cards -->
+  <script>
+    // Demo property data with 3 images each
+    const properties = [
+      {
+        title: "Modern Bedsitter - Kilimani",
+        type: "Bedsitter",
+        price: 8500,
+        location: "Nairobi",
+        coords: [-1.2921, 36.7831],
+        images: [
+          "apart 1.jpg",
+          "apart 2.jpg",
+          "apart 3.jpg"
+        ],
+        distance: "2.3 km away"
+      },
+      {
+        title: "Cozy 1BR - Westlands",
+        type: "1 Bedroom",
+        price: 12000,
+        location: "Nairobi",
+        coords: [-1.2648, 36.8038],
+        images: [
+          "apart 4.jpg",
+          "apart 5.jpg",
+          "apart 6.jpg"
+        ],
+        distance: "4.1 km away"
+      },
+      {
+        title: "Studio Apartment - Kileleshwa",
+        type: "Studio",
+        price: 7000,
+        location: "Nairobi",
+        coords: [-1.2812, 36.7836],
+        images: [
+          "apart 2.jpg",
+          "apart 4.jpg",
+          "apart 6.jpg"
+        ],
+        distance: "1.8 km away"
+      },
+      {
+        title: "Affordable Bedsitter - Nakuru",
+        type: "Bedsitter",
+        price: 4500,
+        location: "Nakuru",
+        coords: [-0.3031, 36.0800],
+        images: [
+          "apart 5.jpg",
+          "apart 3.jpg",
+          "apart 1.jpg"
+        ],
+        distance: "City Center"
+      }
+    ];
+
+    const countyCenters = {
+      'Kwale': [-4.1833, 39.4589],'Kilifi': [-3.5107, 39.9093],'Tana River': [-1.6174, 39.8121],'Lamu': [-2.2358, 40.8586],'Taita Taveta': [-3.3167, 38.4847],
+      'Garissa': [-0.4532, 39.6583],'Wajir': [1.75, 40.05],'Mandera': [3.5731, 41.8582],'Marsabit': [2.3112, 37.979],'Isiolo': [0.3524, 37.5838],
+      'Meru': [0.3557, 37.8088],'Tharaka Nithi': [-0.3167, 37.6667],'Embu': [-0.4532, 37.617],'Kitui': [-1.3667, 38.0106],'Machakos': [-1.5177, 37.2634],
+      'Makueni': [-1.8032, 37.6204],'Nyandarua': [-0.182, 36.4292],'Nyeri': [-0.4167, 36.95],'Kirinyaga': [-0.6597, 37.3827],'Muranga': [-0.7833, 37.04],
+      'Kiambu': [-1.0357, 36.8681],'Turkana': [3.3121, 35.5658],'West Pokot': [1.5028, 35.3706],'Samburu': [1.0834, 36.7258],'Trans Nzoia': [1.0457, 34.9506],
+      'Uasin Gishu': [0.4532, 35.2863],'Elgeyo Marakwet': [0.9737, 35.4782],'Nandi': [0.2138, 35.254],'Baringo': [0.4646, 36.0915],'Laikipia': [0.3607, 36.6512],
+      'Nakuru': [-0.3031, 36.08],'Narok': [-1.1041, 35.8767],'Kajiado': [-1.8511, 36.7766],'Kericho': [-0.3671, 35.2886],'Bomet': [-0.782, 35.349],
+      'Kakamega': [0.2827, 34.7519],'Vihiga': [0.075, 34.7282],'Bungoma': [0.5696, 34.5584],'Busia': [0.4347, 34.2422],'Siaya': [0.0612, 34.2422],
+      'Kisumu': [-0.0917, 34.7679],'Homa Bay': [-0.5271, 34.6666],'Migori': [-1.0634, 34.4731],'Kisii': [-0.6773, 34.7796],'Nyamira': [-0.5691, 34.9346],
+      'Nairobi': [-1.2864, 36.8172]
+    };
+
+    function checkPrice(price, range) {
+      switch(range) {
+        case 'Under KSh 5,000': return price < 5000;
+        case 'KSh 5,000 - 10,000': return price >= 5000 && price <= 10000;
+        case 'KSh 10,000 - 20,000': return price > 10000 && price <= 20000;
+        case 'Over KSh 20,000': return price > 20000;
+        default: return true;
+      }
+    }
+
+    // Render property list with carousel for each property
+    function renderPropertyList(filtered) {
+      const list = document.getElementById('property-list');
+      const count = document.getElementById('property-count');
+      list.innerHTML = '';
+      count.textContent = `${filtered.length} found`;
+      filtered.forEach((property, idx) => {
+        const carouselId = `carousel-${idx}`;
+        let carouselItems = '';
+        property.images.forEach((img, i) => {
+          carouselItems += `
+            <div class="carousel-item${i === 0 ? ' active' : ''}">
+              <img src="${img}" class="d-block w-100" alt="Property view ${i+1}">
+              <div class="carousel-caption d-none d-md-block">
+                <span class="badge bg-success">${['Front View','Left View','Right View'][i]}</span>
+              </div>
+            </div>
+          `;
+        });
+        list.innerHTML += `
+          <div class="property-card card mb-3 shadow-sm" data-idx="${idx}">
+            <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+              <div class="carousel-inner">
+                ${carouselItems}
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+              </button>
+            </div>
+            <div class="card-body">
+              <h6 class="card-title">${property.title}</h6>
+              <div class="d-flex justify-content-between mb-2">
+                <span><i class="fas fa-bed text-success me-1"></i> ${property.type}</span>
+                <span class="fw-bold">KSh ${property.price.toLocaleString()}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <small><i class="fas fa-map-marker-alt text-warning me-1"></i> ${property.distance}</small>
+                <button class="btn btn-sm btn-outline-primary">View</button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // Leaflet map and markers
+    let map, markers = [];
+    function initMapAndMarkers(filtered) {
+      if (!map) {
+        // Base layers
+        const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors'
+        });
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          attribution: '© Esri'
+        });
+        map = L.map('map', {
+          center: [-1.286389, 36.817223],
+          zoom: 12,
+          layers: [streetLayer]
+        });
+        const baseMaps = {
+          "Street View": streetLayer,
+          "Satellite": satelliteLayer
+        };
+        L.control.layers(baseMaps).addTo(map);
+      }
+      // Remove old markers
+      markers.forEach(m => map.removeLayer(m));
+      markers = [];
+      // Add new markers
+      filtered.forEach((property, idx) => {
+        const marker = L.marker(property.coords)
+          .addTo(map)
+          .bindPopup(`
+            <img src="${property.images[0]}" class="property-popup-img" alt="Property">
+            <h6>${property.title}</h6>
+            <div><strong>KSh ${property.price.toLocaleString()}</strong></div>
+            <div>${property.type}</div>
+            <div style="font-size:0.95em;">${property.location}</div>
+          `);
+        markers.push(marker);
+      });
+      // Fit bounds if any property, else reset view
+      if (filtered.length > 0) {
+        const group = L.featureGroup(markers);
+        map.fitBounds(group.getBounds().pad(0.2));
+      }
+    }
+
+    // Filter and update UI
+    function filterAndUpdate(propertiesToFilter, centerOn = null) {
+      renderPropertyList(propertiesToFilter);
+      initMapAndMarkers(propertiesToFilter);
+      if (centerOn) map.setView(centerOn, 14);
+    }
+
+    // Initial render
+    document.addEventListener('DOMContentLoaded', () => {
+      filterAndUpdate(properties);
+
+      // Search button event
+      document.getElementById('search-btn').addEventListener('click', () => {
+        const selectedCounty = document.getElementById('county-select').value;
+        const selectedType = document.getElementById('type-select').value;
+        const selectedPriceRange = document.getElementById('price-select').value;
+        // Filter properties
+        const filtered = properties.filter(p => {
+          const countyMatch = selectedCounty === 'Select County' || p.location.includes(selectedCounty);
+          const typeMatch = selectedType === 'Any' || p.type === selectedType;
+          const priceMatch = checkPrice(p.price, selectedPriceRange);
+          return countyMatch && typeMatch && priceMatch;
+        });
+        filterAndUpdate(filtered, countyCenters[selectedCounty] || null);
+      });
+
+
+      
+  // Simulate user authentication status
+  let isSignedIn = false;
+
+  // Handle "List Property" click
+  document.getElementById('listPropertyNav').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (isSignedIn) {
+      window.location.href = 'list-property.html'; // Change to your actual listing page
+    } else {
+      // Show sign-in modal
+      var signInModal = new bootstrap.Modal(document.getElementById('signInModal'));
+      signInModal.show();
+    }
+  });
+
+  // Handle sign-in form submission
+  document.getElementById('signInForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Simulate sign-in success (replace with real auth in production)
+    isSignedIn = true;
+    bootstrap.Modal.getInstance(document.getElementById('signInModal')).hide();
+    // Optionally, update navbar to show user is signed in
+    document.getElementById('signInNav').innerHTML = '<i class="fas fa-user-check me-1"></i> Signed In';
+    // Redirect to List Property page
+    window.location.href = 'Listing 3.html';
+  });
+
+
+
+      // My Location button event
+      document.getElementById('my-location-btn').addEventListener('click', () => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(pos => {
+            const userLatLng = [pos.coords.latitude, pos.coords.longitude];
+            // Filter properties within ~5km (0.045 deg) of user
+            const filtered = properties.filter(p => {
+              const dLat = p.coords[0] - userLatLng[0];
+              const dLng = p.coords[1] - userLatLng[1];
+              return Math.sqrt(dLat*dLat + dLng*dLng) < 0.045;
+            });
+            filterAndUpdate(filtered, userLatLng);
+            // Add a marker for user location
+            L.marker(userLatLng, {icon: L.icon({
+              iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
+              iconSize: [32,32]
+            })}).addTo(map).bindPopup("You are here").openPopup();
+          }, () => {
+            alert("Unable to get your location.");
+          });
+        } else {
+          alert("Geolocation not supported by your browser.");
+        }
+      });
+      // Toggle between form and search
+document.getElementById('navSearch').addEventListener('click', function(e) {
+  e.preventDefault();
+  document.getElementById('listingForm').style.display = 'none';
+  document.getElementById('searchSection').style.display = 'block';
+  initSearchMap();
+});
+
+// Initialize Search Map
+let map, searchMap, directionsService, directionsRenderer;
+
+function initSearchMap() {
+  if (!searchMap) {
+    searchMap = new google.maps.Map(document.getElementById('searchMap'), {
+      center: {lat: -1.2921, lng: 36.8219},
+      zoom: 12,
+      styles: [{
+        featureType: "poi",
+        elementType: "labels",
+        stylers: [{visibility: "off"}]
+      }]
+    });
+
+    // Add autocomplete to search input
+    const autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById('searchInput'),
+      {types: ['geocode']}
+    );
+
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace();
+      if (place.geometry) {
+        searchMap.setCenter(place.geometry.location);
+        searchMap.setZoom(14);
+        showPropertiesInArea(place.geometry.location);
+      }
+    });
+
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(searchMap);
+  }
+}
+
+// Show properties in searched area (demo markers)
+function showPropertiesInArea(center) {
+  // Replace with your actual property data
+  const properties = [
+    {lat: center.lat() + 0.005, lng: center.lng() + 0.005},
+    {lat: center.lat() - 0.005, lng: center.lng() - 0.005}
+  ];
+
+  properties.forEach(prop => {
+    new google.maps.Marker({
+      position: prop,
+      map: searchMap,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 8,
+        fillColor: '#f7f700',
+        fillOpacity: 1,
+        strokeColor: '#b5e48c',
+        strokeWeight: 2
+      }
+    });
+  });
+}
+
+// Route handling
+function getRoute(type) {
+  const destination = document.getElementById('latitude').value + ',' + 
+                     document.getElementById('longitude').value;
+  
+  let origin;
+  if (type === 'current') {
+    navigator.geolocation.getCurrentPosition(pos => {
+      origin = `${pos.coords.latitude},${pos.coords.longitude}`;
+      calculateRoute(origin, destination);
+    });
+  } else {
+    origin = document.getElementById('customFrom').value;
+    calculateRoute(origin, destination);
+  }
+}
+
+function calculateRoute(origin, destination) {
+  directionsService.route({
+    origin: origin,
+    destination: destination,
+    travelMode: google.maps.TravelMode.DRIVING
+  }, (response, status) => {
+    if (status === 'OK') {
+      directionsRenderer.setDirections(response);
+    } else {
+      alert('Directions request failed: ' + status);
+    }
+  });
+}
+    });
+  </script>
+  <!-- Sign In Modal -->
+<div class="modal fade" id="signInModal" tabindex="-1" aria-labelledby="signInModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form id="signInForm" autocomplete="off">
+        <div class="modal-header">
+          <h5 class="modal-title" id="signInModalLabel"><i class="fas fa-user"></i> Sign In</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="signin-email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="signin-email" required>
+          </div>
+          <div class="mb-3">
+            <label for="signin-password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="signin-password" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary w-100">Sign In</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
