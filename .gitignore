@@ -1,0 +1,9 @@
+# Laravel backend
+/vendor
+/.env
+
+# Angular frontend
+dev_portal/node_modules
+ev_portal/dist
+dev_portal/.angular/cache
+dev_portal/.env
