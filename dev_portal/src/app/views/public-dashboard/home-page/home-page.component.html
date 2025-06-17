@@ -1,1 +1,157 @@
-<br><br><br><br><br><br><h1>home-page works!</h1>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Optional: Bootstrap Icons for close buttons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+
+
+<div class="min-vh-100 d-flex flex-column">
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold text-success" href="#">KEJA-254</a>
+      <div class="ms-auto">
+        <!-- Login & Register buttons trigger modals -->
+        <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+          Login
+        </button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
+          Register
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="container py-5 text-center">
+    <h1 class="display-5 fw-bold text-success">Effortless Property Management</h1>
+    <p class="lead text-muted">Manage properties, tenants, and maintenance in one place.</p>
+    <!-- <div class="d-flex justify-content-center gap-3">
+      <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+      <button class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>
+    </div> -->
+  </section>
+
+  <!-- About Section -->
+  <section class="container py-4 text-center">
+    <h2 class="text-success">KEJA-254?</h2>
+    <p>We simplify the process of managing rental properties, tenants, maintenance, and payments for landlords and property managers.</p>
+    <ul class="list-unstyled">
+      <li>Automated rent collection</li>
+      <li>Lease and tenant tracking</li>
+      <li>Maintenance request management</li>
+      <li>Financial reporting</li>
+    </ul>
+  </section>
+
+  <!-- Features Section -->
+  <section class="container py-4">
+    <div class="row text-center">
+      <div class="col-md-3 mb-3">
+        <div class="card h-100 shadow-sm border-success">
+          <div class="card-body">
+            <h5 class="text-success">Online Payments</h5>
+            <p class="text-muted">Secure and automated rent payments.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card h-100 shadow-sm border-success">
+          <div class="card-body">
+            <h5 class="text-success">Lease Management</h5>
+            <p class="text-muted">Track leases and important dates.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card h-100 shadow-sm border-success">
+          <div class="card-body">
+            <h5 class="text-success">Maintenance Requests</h5>
+            <p class="text-muted">Log and resolve maintenance issues.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card h-100 shadow-sm border-success">
+          <div class="card-body">
+            <h5 class="text-success">Communication Tools</h5>
+            <p class="text-muted">Message tenants and owners easily.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white py-4 mt-auto">
+    <div class="container text-center">
+      <small class="text-muted">&copy; 2025 keja-254. All rights reserved.</small>
+    </div>
+  </footer>
+</div>
+
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-success">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="loginModalLabel">Login</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="loginEmail" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="loginEmail" placeholder="Enter email" required>
+          </div>
+          <div class="mb-3">
+            <label for="loginPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
+          </div>
+          <div class="mb-3">
+            <a href="#" class="small">Forgot password?</a>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Register Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-success">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="registerModalLabel">Register</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="registerName" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="registerName" placeholder="Enter your name" required>
+          </div>
+          <div class="mb-3">
+            <label for="registerEmail" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="registerEmail" placeholder="Enter email" required>
+          </div>
+          <div class="mb-3">
+            <label for="registerPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="registerPassword" placeholder="Password" required>
+          </div>
+          <div class="mb-3">
+            <label for="registerConfirmPassword" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="registerConfirmPassword" placeholder="Confirm Password" required>
+          </div>
+          <button type="submit" class="btn btn-outline-success w-100">Sign Up</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS Bundle (includes Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
